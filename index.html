@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Service Workers Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .startButton {
+      height: 40px;
+      width: 200px;
+    }
+    input[type="number"] {
+      width: 60px;
+    }
+    .left {
+      float: left;
+      margin-right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <hanoi :fn="nonWorker" :finished="nonWorkerFinished"></hanoi><br>
+    <hanoi :fn="withWorker" :finished="withWorkerFinished"></hanoi>
+  </div>
+  <hr>
+  <div class="left">
+    <button>Foo</button>
+    <button>Bar</button>
+    <button>Foo</button>
+    <button>Bar</button><br>
+    <button>Foo</button>
+    <button>Bar</button>
+    <button>Foo</button>
+    <button>Bar</button><br>
+    <input type="date"><br>
+    <input type="color">
+    <input type="week"><br>
+  </div>
+  <div class="left">
+    <blockquote class="imgur-embed-pub" lang="en" data-id="4vFMEwu"><a href="https://imgur.com/4vFMEwu">&quot;Maybe if I just back up, you&#39;ll move!&quot;</a></blockquote><script async src="https://s.imgur.com/min/embed.js" charset="utf-8"></script>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.js"></script>
+<script>
+const move = (s, t) => { t.push(s.pop()) }
+
+const hanoi = (source, temp, target, n) => {
+  if (n === 1) { return move(source, target) }
+  hanoi(source, target, temp, n - 1)
+  move(source, target)
+  hanoi(temp, source, target, n - 1)
+}
+
+const createStack = n => [...(new Array(n)).keys()]
+
+const runNewHanoi = n => {
+  const a = createStack(n)
+  const b = []
+  const c = []
+
+  console.log('Starting hanoi', a, b, c)
+  console.time('NonWorker')
+  hanoi(a, b, c, n)
+  console.timeEnd('NonWorker')
+  console.log('Finished', a, b, c)
+}
+
+Vue.component('hanoi', {
+  template: `
+    <div>
+      <input type="number" v-model.number="n" min="1" max="33">
+      <button class="startButton" @click="() => fn(n)">Start</button>
+      state: {{ finished }}
+    </div>`,
+  props: ['fn', 'finished'],
+  data () {
+    return {
+      n: 20
+    }
+  }
+})
+
+new Vue({
+  el: '#app',
+  data: {
+    nonWorkerFinished: 'idle',
+    withWorkerFinished: 'idle'
+  },
+
+  methods: {
+    nonWorker (n) {
+      this.nonWorkerFinished = 'running'
+      runNewHanoi(n)
+      this.nonWorkerFinished = 'finished'
+    },
+    withWorker (n) {
+      this.withWorkerFinished = 'running'
+      const worker = new Worker('sw.js')
+      worker.onmessage = e => {
+        this.withWorkerFinished = 'finished'
+      }
+      worker.postMessage({ cmd: 'start', n })
+    }
+  }
+})
+
+</script>
+</body>
+</html>
