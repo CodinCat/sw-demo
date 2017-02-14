@@ -4,13 +4,18 @@
   <meta charset="UTF-8">
   <title>Service Workers Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="buttons.css">
   <style>
+    * { box-sizing: border-box  }
+    body { padding: 20px 0 0 20px;  }
+    h3 { font-size: 40px; line-height: 1; margin: 0;  }
     .startButton {
       height: 40px;
       width: 200px;
     }
     input[type="number"] {
       width: 60px;
+      height: 40px;
     }
     .left {
       float: left;
@@ -29,9 +34,13 @@
 <template id="inputs">
   <div>
     <h3>{{count}}</h3>
-    <button v-for="n in 4" @click="count++">Hihi</button><br>
-    <button v-for="n in 4" @click="count++">Hihi</button><br>
-    <input type="date"><input type="text"><br>
+    <div style="height: 80px"><button v-for="n in 4" class="button green" @click="count++">Hi Hi</button></div>
+    <div style="height: 80px"><button v-for="n in 4" class="button red" @click="count++">Hi Hi</button></div>
+    <div style="height: 80px"><button v-for="n in 4" class="button yellow" @click="count++">Hi Hi</button></div>
+    <div style="height: 80px"><button v-for="n in 4" class="button blue" @click="count++">Hi Hi</button></div>
+    <select>
+      <option v-for="n in 10">foo {{n}} bar</option>
+    </select><input type="text"><br>
     <input type="color"><input type="week"><br>
   </div>
 </template>
