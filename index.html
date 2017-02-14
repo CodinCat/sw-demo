@@ -19,27 +19,34 @@
   </style>
 </head>
 <body>
-  <div id="app">
-    <hanoi :fn="nonWorker" :finished="nonWorkerFinished"></hanoi><br>
-    <hanoi :fn="withWorker" :finished="withWorkerFinished"></hanoi>
+<template id="hanoi">
+  <div>
+    <input type="number" v-model.number="n" min="1" max="33">
+    <button class="startButton" @click="() => fn(n)">Start</button>
+    state: {{ finished }}
   </div>
+</template>
+<template id="inputs">
+  <div>
+    <h3>{{count}}</h3>
+    <button v-for="n in 4" @click="count++">Hihi</button><br>
+    <button v-for="n in 4" @click="count++">Hihi</button><br>
+    <input type="date"><input type="text"><br>
+    <input type="color"><input type="week"><br>
+  </div>
+</template>
+
+<div id="app">
+  <hanoi :fn="nonWorker" :finished="nonWorkerFinished"></hanoi><br>
+  <hanoi :fn="withWorker" :finished="withWorkerFinished"></hanoi>
   <hr>
   <div class="left">
-    <button>Foo</button>
-    <button>Bar</button>
-    <button>Foo</button>
-    <button>Bar</button><br>
-    <button>Foo</button>
-    <button>Bar</button>
-    <button>Foo</button>
-    <button>Bar</button><br>
-    <input type="date"><br>
-    <input type="color">
-    <input type="week"><br>
+    <inputs></inputs>
   </div>
-  <div class="left">
-    <blockquote class="imgur-embed-pub" lang="en" data-id="4vFMEwu"><a href="https://imgur.com/4vFMEwu">&quot;Maybe if I just back up, you&#39;ll move!&quot;</a></blockquote><script async src="https://s.imgur.com/min/embed.js" charset="utf-8"></script>
-  </div>
+</div>
+<div class="left">
+  <blockquote class="imgur-embed-pub" lang="en" data-id="4vFMEwu"><a href="https://imgur.com/4vFMEwu">&quot;Maybe if I just back up, you&#39;ll move!&quot;</a></blockquote><script async src="https://s.imgur.com/min/embed.js" charset="utf-8"></script>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.js"></script>
 <script>
@@ -66,13 +73,17 @@ const runNewHanoi = n => {
   console.log('Finished', a, b, c)
 }
 
+Vue.component('inputs', {
+  template: '#inputs',
+  data () {
+    return {
+      count: 0
+    }
+  }
+})
+
 Vue.component('hanoi', {
-  template: `
-    <div>
-      <input type="number" v-model.number="n" min="1" max="33">
-      <button class="startButton" @click="() => fn(n)">Start</button>
-      state: {{ finished }}
-    </div>`,
+  template: '#hanoi',
   props: ['fn', 'finished'],
   data () {
     return {
@@ -104,7 +115,6 @@ new Vue({
     }
   }
 })
-
 </script>
 </body>
 </html>

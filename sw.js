@@ -15,9 +15,9 @@ const runNewHanoi = n => {
   const c = []
 
   console.log('Starting hanoi', a, b, c)
-  console.time('NonWorker')
+  console.time('WithWorker')
   hanoi(a, b, c, n)
-  console.timeEnd('NonWorker')
+  console.timeEnd('WithWorker')
   console.log('Finished', a, b, c)
 }
 
